@@ -1,0 +1,8 @@
+func kthSmallest(matrix [][]int, k int) int {
+     arr :=  []int{}
+    for _, row := range matrix{
+        arr = append(arr,row...)
+    }
+    sort.Ints(arr)
+    return arr[k-1]
+}

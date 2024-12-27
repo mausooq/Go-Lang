@@ -1,0 +1,103 @@
+package main
+
+import (
+	"container/heap"
+	"fmt"
+	"math"
+)
+
+var path = [][]int{
+	{-1, 0}, {1, 0}, {0, -1}, {0, 1},  // Up, Down, Left, Right
+	{-1, -1}, {-1, 1}, {1, -1}, {1, 1}, // Diagonals
+}
+
+type point struct {
+	x, y, dist int
+}
+
+type Q []point
+
+func (pq Q) Len() int           { return len(pq) }
+func (pq Q) Less(i, j int) bool { return pq[i].dist < pq[j].dist }
+func (pq Q) Swap(i, j int)      { pq[i], pq[j] = pq[j], pq[i] }
+func (pq *Q) Push(x interface{}) {
+	*pq = append(*pq, x.(point))
+}
+func (pq *Q) Pop() interface{} {
+	old := *pq
+	n := len(old)
+	item := old[n-1]
+	*pq = old[:n-1]
+	return item
+}
+
+func shortestPathBinaryMatrix(grid [][]int) int {
+	n := len(grid)
+
+	// Check if start or end is blocked
+	if grid[0][0] == 1 || grid[n-1][n-1] == 1 {
+		return -1
+	}
+
+	// Initialize the distance matrix
+	dist := make([][]int, n)
+	for i := range dist {
+		dist[i] = make([]int, n)
+		for j := range dist[i] {
+			dist[i][j] = math.MaxInt32
+		}
+	}
+	dist[0][0] = 1
+
+	// Priority queue
+	pq := &Q{}
+	heap.Init(pq)
+	heap.Push(pq, point{0, 0, 1}) // Start point with distance 1
+
+	for pq.Len() > 0 {
+		curr := heap.Pop(pq).(point)
+		x, y, d := curr.x, curr.y, curr.dist
+
+		// If reached bottom-right
+		if x == n-1 && y == n-1 {
+			return d
+		}
+
+		// Explore neighbors
+		for _, dir := range path {
+			newRow, newCol := x+dir[0], y+dir[1]
+			newDist := d + 1
+			if newRow >= 0 && newRow < n && newCol >= 0 && newCol < n && grid[newRow][newCol] == 0 && newDist < dist[newRow][newCol] {
+				dist[newRow][newCol] = newDist
+				heap.Push(pq, point{newRow, newCol, newDist})
+			}
+		}
+	}
+
+	return -1 // No path found
+}
+
+func main() {
+	// Example 1
+	grid1 := [][]int{
+		{0, 1},
+		{1, 0},
+	}
+	fmt.Println("Example 1:", shortestPathBinaryMatrix(grid1)) // Output: 2
+
+	// Example 2
+	grid2 := [][]int{
+		{0, 0, 0},
+		{1, 1, 0},
+		{1, 1, 0},
+	}
+	fmt.Println("Example 2:", shortestPathBinaryMatrix(grid2)) // Output: 4
+
+	// Example 3
+	grid3 := [][]int{
+		{1, 0, 0},
+		{1, 1, 0},
+		{1, 1, 0},
+	}
+	fmt.Println("Example 3:", shortestPathBinaryMatrix(grid3)) // Output: -1
+}
