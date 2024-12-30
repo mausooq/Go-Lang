@@ -1,0 +1,97 @@
+package main
+
+import "fmt"
+
+func knapsack(weight []int, value []int, W int, n int) int {
+	// Create a 2D DP array
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, W+1)
+	}
+
+	// Populate the DP table
+	for i := 1; i <= n; i++ { // Iterate over items
+		for w := 1; w <= W; w++ { // Iterate over capacities
+			if weight[i-1] <= w { // If the item fits in the current capacity
+				dp[i][w] = max(value[i-1]+dp[i-1][w-weight[i-1]], dp[i-1][w])
+			} else { // Otherwise, exclude the item
+				dp[i][w] = dp[i-1][w]
+			}
+		}
+	}
+
+	// Debug: Print the DP table
+	fmt.Println("DP Table:")
+	for _, row := range dp {
+		fmt.Println(row)
+	}
+
+	return dp[n][W] // Maximum value for capacity W
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func main() {
+	// Test case
+	weight := []int{1, 3, 4, 5}
+	value := []int{1, 4, 5, 7}
+	W := 7 // Maximum capacity
+
+	// Solve the 0/1 Knapsack Problem
+	res := knapsack(weight, value, W, len(weight))
+	fmt.Println("Maximum value in knapsack:", res)
+}
+
+
+//recursion
+
+
+func knapsackMemo(weights, values []int, W, n int, memo [][]int) int {
+	// Base case
+	if n == 0 || W == 0 {
+		return 0
+	}
+
+	// Check if the result is already computed
+	if memo[n][W] != -1 {
+		return memo[n][W]
+	}
+
+	// If the weight of the nth item is more than the capacity, skip it
+	if weights[n-1] > W {
+		memo[n][W] = knapsackMemo(weights, values, W, n-1, memo)
+		return memo[n][W]
+	}
+
+	// Otherwise, choose the maximum of including or excluding the nth item
+	include := values[n-1] + knapsackMemo(weights, values, W-weights[n-1], n-1, memo)
+	exclude := knapsackMemo(weights, values, W, n-1, memo)
+
+	memo[n][W] = max(include, exclude)
+	return memo[n][W]
+}
+
+func main() {
+	weights := []int{1, 3, 4, 5}
+	values := []int{1, 4, 5, 7}
+	W := 7
+
+	n := len(weights)
+
+	// Initialize memoization table
+	memo := make([][]int, n+1)
+	for i := range memo {
+		memo[i] = make([]int, W+1)
+		for j := range memo[i] {
+			memo[i][j] = -1
+		}
+	}
+
+	result := knapsackMemo(weights, values, W, n, memo)
+	fmt.Println("Maximum value in knapsack:", result) // Output: 9
+}

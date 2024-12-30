@@ -6,6 +6,7 @@ import "fmt"
 
 func search(a [][]byte , word string) bool {
     row := len(a)
+    
     col := len(a[0])
     
     var dfs func(r,c,idx int) bool

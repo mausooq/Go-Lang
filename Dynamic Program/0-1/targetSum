@@ -1,0 +1,31 @@
+func findTargetSumWays(nums []int, target int) int {
+    n := len(nums)
+totalSum := 0
+for _, v := range nums{
+    totalSum += v
+}
+subset := (totalSum + target) / 2
+
+ if totalSum + target < 0 || (totalSum + target) % 2 != 0 {
+        return 0
+    }
+
+    dp := make([][]int , n+1)
+    for i := range dp {
+        dp[i] = make([]int,subset+1)
+    }
+for i := 0; i <= n; i++ {
+    dp[i][0] = 1  // There is 1 way to make sum 0 (by choosing no elements)
+}
+
+for i := 1; i <= n; i++ {
+    for j := 0; j <= subset; j++ {  
+        if nums[i-1] <= j {  
+            dp[i][j] = dp[i-1][j] + dp[i-1][j-nums[i-1]]
+        } else {
+            dp[i][j] = dp[i-1][j]  
+        }
+    }
+}
+    return dp[n][subset]
+}

@@ -1,0 +1,50 @@
+// Online Go compiler to run Golang program online
+// Print "Try programiz.pro" message
+
+package main
+import "fmt"
+
+func main() {
+  fmt.Println("Try programiz.pro")
+ 
+  price := []int{3}
+ 
+  N := 1
+  
+  fmt.Println(rodCuting(price,N,len(price)))
+}
+
+func rodCuting(price []int , N int,n int)int{
+    length := make([]int,N)
+    for i := range length{
+        length[i] = i+1
+    }
+    
+
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int ,N+1 )
+    }
+    
+    for i := 1 ; i <= n ; i++{
+        for j :=0 ; j <= N  ; j++{
+            if length[i-1] > j {
+                dp[i][j] = dp[i-1][j]
+            } else {
+                dp[i][j] = max(price[i-1]+dp[i][j-length[i-1]],dp[i-1][j])
+            }
+        }
+    }
+    for _, val := range dp{
+        fmt.Println(val)
+    }
+    return dp[n][N]
+    
+}
+func max(a,b int)int {
+    if a > b {
+        return a
+    }
+    return b
+}
+

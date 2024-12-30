@@ -1,0 +1,77 @@
+package main
+
+import "fmt"
+
+func subsetSum(arr []int, n int, target int) bool {
+	
+	dp := make([][]bool, n+1)
+	for i := range dp {
+		dp[i] = make([]bool, target+1)
+	}
+
+	
+	for i := 0; i <= n; i++ {
+		dp[i][0] = true
+	}
+
+
+	for i := 1; i <= n; i++ {
+		for j := 1; j <= target; j++ {
+			if arr[i-1] > j {
+				dp[i][j] = dp[i-1][j] 
+			} else {
+				dp[i][j] = dp[i-1][j] || dp[i-1][j-arr[i-1]] 
+			}
+		}
+	}
+
+
+	return dp[n][target]
+}
+
+func main() {
+	arr := []int{3, 34, 4, 12, 5, 2}
+	sum := 9
+	if subsetSum(arr, len(arr), sum) {
+		fmt.Println("Subset with the given sum exists.")
+	} else {
+		fmt.Println("No subset with the given sum exists.")
+	}
+}
+
+
+// Recursive function to solve the subset sum problem
+
+package main
+
+import "fmt"
+
+
+func subsetSum(nums []int, target int, n int) bool {
+	// Base Cases
+	if target == 0 {
+		return true // Subset with sum 0 is always possible
+	}
+	if n == 0 {
+		return false // No elements left and target not achieved
+	}
+
+	// Exclude the current element
+	if nums[n-1] > target {
+		return subsetSum(nums, target, n-1)
+	}
+
+	// Include the current element or exclude it
+	return subsetSum(nums, target-nums[n-1], n-1) || subsetSum(nums, target, n-1)
+}
+
+func main() {
+	nums := []int{3, 34, 4, 12, 5, 2}
+	target := 9
+
+	if subsetSum(nums, target, len(nums)) {
+		fmt.Println("Subset with the given sum exists.")
+	} else {
+		fmt.Println("No subset with the given sum exists.")
+	}
+}
