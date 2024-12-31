@@ -1,0 +1,59 @@
+package main
+
+import (
+	"fmt"
+)
+
+// Function to find and return the longest common subsequence
+func longestCommonSubsequence(str1, str2 string) string {
+	n := len(str1)
+	m := len(str2)
+
+	// Create a 2D slice to store LCS lengths
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, m+1)
+	}
+
+	// Fill the dp table
+	for i := 1; i <= n; i++ {
+		for j := 1; j <= m; j++ {
+			if str1[i-1] == str2[j-1] {
+				dp[i][j] = dp[i-1][j-1] + 1
+			} else {
+				dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+			}
+		}
+	}
+
+	// Backtrack to find the LCS
+	i, j := n, m
+	lcs := []byte{}
+	for i > 0 && j > 0 {
+		if str1[i-1] == str2[j-1] {
+			lcs = append([]byte{str1[i-1]}, lcs...) // Add character to LCS
+			i--
+			j--
+		} else if dp[i-1][j] > dp[i][j-1] {
+			i--
+		} else {
+			j--
+		}
+	}
+
+	return string(lcs)
+}
+
+// Utility function to find the maximum of two integers
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func main() {
+	str1 := "AGGTAB"
+	str2 := "GXTXAYB"
+	fmt.Println("Longest Common Subsequence:", longestCommonSubsequence(str1, str2))
+}

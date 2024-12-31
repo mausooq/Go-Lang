@@ -1,0 +1,48 @@
+package main
+
+import (
+	"fmt"
+)
+func reverse(s1 string) string{
+    runes := []rune(s1)
+    n := len(s1)
+    for i := 0 ; i <  n/2; i++{
+        runes[i] , runes[n-i-1] = runes[n-i-1],runes[i]
+    }
+    return string(runes)
+}
+func LPS(s1 string) int{
+    s2 := reverse(s1)
+    n := len(s1)
+    m := len(s2)
+    dp := make([][]int, n+1)
+    for i := range dp{
+        dp[i] = make([]int,m+1)
+    }
+    for i := 1 ; i <= n ; i++{
+        for j := 1 ; j <= m ; j++{
+            if s1[i-1] == s2[j-1]{
+                dp[i][j] = 1+dp[i-1][j-1]
+            } else {
+                dp[i][j] = max(dp[i-1][j] , dp[i][j-1])
+            }
+        }
+    }
+    
+    return dp[n][m]
+}
+
+
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func main() {
+	str1 := "agbcba"
+    fmt.Println(LPS(str1))
+    
+}
