@@ -1,0 +1,118 @@
+// Online Go compiler to run Golang program online
+// Print "Try programiz.pro" message
+
+package main
+import "fmt"
+
+func hasCycleUndirected(n int,connections [][]int) bool {
+    graph := make(map[int][]int)
+    
+    for _ , val := range connections{
+        graph[val[0]] = append(graph[val[0]],val[1])
+        graph[val[1]] = append(graph[val[1]],val[0])
+    }
+    
+    fmt.Println(graph)
+    
+    visited := make([]bool,n)
+    var DFS func(source  , parent int)bool
+    DFS = func(source,parent int) bool{
+        visited[source] = true
+        
+        for _, val := range graph[source]{
+            if !visited[val] {
+                if DFS(val,source){
+                    return true
+                }
+            } else if val != parent{
+                return true
+            }
+        }
+        return false
+        
+    }
+    
+    
+    for i := 0 ;i < n ; i++{
+        if !visited[i] && DFS(i,-1){
+            return true
+        }
+    }
+    return false
+    
+}
+
+
+func main() {
+    n := 5
+    edges := [][]int{
+        {0, 1}, {1, 2}, {2, 0}, {3, 4},
+    }
+
+    if hasCycleUndirected(n, edges) {
+        fmt.Println("Cycle detected in the undirected graph.")
+    } else {
+        fmt.Println("No cycle detected in the undirected graph.")
+    }
+}
+
+
+
+// package main
+
+// import "fmt"
+
+// func hasCycleDirected(n int, edges [][]int) bool {
+//     graph := make(map[int][]int)
+
+//     // Build the graph
+//     for _, edge := range edges {
+//         u, v := edge[0], edge[1]
+//         graph[u] = append(graph[u], v)
+//     }
+
+//     visited := make([]bool, n)
+//     recStack := make([]bool, n)
+
+//     // DFS function
+//     var dfs func(node int) bool
+//     dfs = func(node int) bool {
+//         visited[node] = true
+//         recStack[node] = true
+
+//         for _, neighbor := range graph[node] {
+//             if !visited[neighbor] {
+//                 if dfs(neighbor) {
+//                     return true
+//                 }
+//             } else if recStack[neighbor] {
+//                 return true
+//             }
+//         }
+
+//         recStack[node] = false
+//         return false
+//     }
+
+//     // Check all components
+//     for i := 0; i < n; i++ {
+//         if !visited[i] && dfs(i) {
+//             return true
+//         }
+//     }
+
+//     return false
+// }
+
+// func main() {
+//     n := 4
+//     edges := [][]int{
+//         {0, 1}, {1, 2}, {2, 0}, {3, 1},
+//     }
+
+//     if hasCycleDirected(n, edges) {
+//         fmt.Println("Cycle detected in the directed graph.")
+//     } else {
+//         fmt.Println("No cycle detected in the directed graph.")
+//     }
+// }

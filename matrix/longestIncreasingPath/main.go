@@ -26,7 +26,7 @@ func longestIncreasingPath(matrix [][]int) int {
     var dfs func(r,c int) int 
     dfs = func (r,c int) int{
         
-        if temp[r][c] != 0{
+        if temp[r][c] != 0 {
             return temp[r][c]
         }
         
@@ -38,6 +38,8 @@ func longestIncreasingPath(matrix [][]int) int {
                 maxPath = max(maxPath,1+dfs(newRow,newCol))
             }
         }
+        temp[r][c] = maxPath
+        // fmt.Println(temp)
         return maxPath
 
     }

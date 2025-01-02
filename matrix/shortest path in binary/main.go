@@ -38,7 +38,7 @@ func shortestPathBinaryMatrix(grid [][]int) int{
 		for _, val := range dir{
 		    newRow , newCol := row+val[0] ,col+val[1]
 		    
-		    if newRow > n && newRow >= 0 && newCol >=0 && newCol > n && grid[newRow][newCol] == 0 {
+		    if newRow < n && newRow >= 0 && newCol >=0 && newCol < n && grid[newRow][newCol] == 0 {
 		        que = append(que,[]int{newRow,newCol,step+1})
 		        grid[newRow][newCol] = 1
 		    }

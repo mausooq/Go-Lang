@@ -1,0 +1,33 @@
+package main
+import "fmt"
+
+type Edge struct {
+    From , To int
+}
+
+func main(){
+    edges := []Edge{
+        {From: 1, To: 2},
+		{From: 2, To: 3},
+		{From: 3, To: 4},
+		{From: 4, To: 1},
+		{From: 2, To: 4},
+    }
+
+    n := 4
+    
+    matrix := make([][]int , n)
+    for i := range matrix{
+        matrix[i] = make([]int,n)
+    }
+    
+    for _,edge := range edges{
+            matrix[edge.From-1][edge.To-1] = 1
+            matrix[edge.To-1][edge.From-1] = 1
+    }
+    
+    for _, row := range matrix{
+        fmt.Println(row)
+    }
+    
+}

@@ -1,0 +1,30 @@
+package main
+import "fmt"
+
+type Edge struct {
+    From , To int
+}
+
+func main(){
+    edges := []Edge{
+        {From: 1, To: 2},
+		{From: 2, To: 3},
+		{From: 3, To: 4},
+		{From: 4, To: 1},
+		{From: 2, To: 4},
+    }
+
+  
+    
+    graph := make(map[int][]int)
+    
+    for _,edge := range edges{
+        graph[edge.From] = append(graph[edge.From],edge.To)
+        graph[edge.To] = append(graph[edge.To],edge.From)
+    }
+    fmt.Println("Adjacency List of the Graph:")
+	for node, neighbors := range graph {
+		fmt.Printf("%d -> %v\n", node, neighbors)
+	}
+    
+}

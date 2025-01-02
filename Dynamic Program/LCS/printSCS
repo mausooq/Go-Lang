@@ -3,7 +3,7 @@
 
 package main
 import "fmt"
-func lcs(s1 string, s2 string) int{
+func lcs(s1 string, s2 string) string{
     n := len(s1)
     m := len(s2)
     
@@ -21,7 +21,31 @@ func lcs(s1 string, s2 string) int{
         }
     }
   
-   return (n+m) - dp[n][m]
+   
+   i , j := n, m 
+   scs := []byte{}
+   for i > 0 && j > 0 {
+       if s1[i-1] == s2[j-1]{
+           scs = append([]byte{s1[i-1]},scs...)
+           i--
+           j--
+       } else if dp[i-1][j] > dp[i][j-1]{
+            scs = append([]byte{s1[i-1]},scs...)
+            i--
+       } else {
+            scs = append([]byte{s2[j-1]},scs...)
+            j--
+       }
+   }
+   for i > 0{
+       scs = append([]byte{s1[i-1]},scs...)
+            i--
+   }
+   for j > 0{
+         scs = append([]byte{s2[j-1]},scs...)
+            j--
+   }
+   return string(scs)
 }
 
 

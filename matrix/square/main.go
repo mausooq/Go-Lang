@@ -30,6 +30,7 @@ func maximalSquare(matrix [][]byte) int {
 				} else {
 					// Calculate minimum of the three neighbors
 					dp[i][j] = min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1
+					// fmt.Println(dp[i][j])
 				}
 				// Update maxSquare
 				maxSquare = max(maxSquare, dp[i][j])

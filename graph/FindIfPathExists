@@ -1,0 +1,84 @@
+package main
+
+import "fmt"
+
+// validPath checks if there exists a valid path from source to destination
+func validPath(n int, edges [][]int, source int, destination int) bool {
+    graph := Graph(edges)
+
+    // BFS
+    queue := []int{source}
+    visited := make([]bool, n)
+    visited[source] = true
+
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+
+        // Traverse all neighbors of the current node
+        for _, val := range graph[node] {
+            if !visited[val] {
+                queue = append(queue, val)
+                visited[val] = true
+            }
+        }
+    }
+
+    return visited[destination]
+}
+
+// Graph creates an adjacency list for the given edges
+func Graph(a [][]int) map[int][]int {
+    newGraph := make(map[int][]int)
+    for _, value := range a {
+        // Add both directions for an undirected graph
+        newGraph[value[0]] = append(newGraph[value[0]], value[1])
+        newGraph[value[1]] = append(newGraph[value[1]], value[0])
+    }
+    return newGraph
+}
+
+func main() {
+    n := 10
+    edges := [][]int{
+        {0, 7}, {0, 8}, {6, 1}, {2, 0}, {0, 4}, {5, 8}, {4, 7}, {1, 3}, {3, 5}, {6, 5},
+    }
+    source := 7
+    destination := 5
+
+    result := validPath(n, edges, source, destination)
+    fmt.Println(result) // Expected output: true
+}
+
+
+//----------------------------------------------------------------------------
+
+// func validPath(n int, edges [][]int, source int, destination int) bool {
+//     graph := Graph(edges)
+    // DFS
+//     visited := make([]bool, n)
+//     var dfs func(a map[int][]int , src int)
+//     dfs = func(a map[int][]int , src int){
+//          if visited[src] {
+//             return
+//         }
+//         visited[src] = true 
+//         for _ , value := range a[src] {
+//             dfs(a,value)
+//         }
+//     }
+//     dfs(graph, source)
+
+//     return visited[destination]
+
+// }
+
+
+// func Graph(a [][]int) map[int][]int{
+//     newGraph := make(map[int][]int)
+//     for _,value := range a{
+//         newGraph[value[0]] = append(newGraph[value[0]],value[1])
+//          newGraph[value[1]] = append(newGraph[value[1]], value[0])
+//     }
+//     return newGraph
+// }

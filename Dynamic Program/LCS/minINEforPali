@@ -1,9 +1,9 @@
-// Online Go compiler to run Golang program online
-// Print "Try programiz.pro" message
-
-package main
-import "fmt"
-func lcs(s1 string, s2 string) int{
+func minInsertions(s string) int {
+   lcs := LCS(s,reverse(s))
+   return len(s) - lcs
+   
+}
+func LCS(s1 string, s2 string) int{
     n := len(s1)
     m := len(s2)
     
@@ -20,19 +20,21 @@ func lcs(s1 string, s2 string) int{
             }
         }
     }
-  
-   return (n+m) - dp[n][m]
+   return dp[n][m]
 }
 
-
-func max(a,b int) int {
+func max(a,b int) int{
     if a > b {
         return a
     }
     return b
 }
-func main() {
-    X := "abca"
-    Y := "abc"
-    fmt.Println(lcs(X,Y))
+
+func reverse(s string)string{
+    n := len(s)
+    runes := []byte(s)
+    for i :=0 ; i < n/2 ; i++{
+        runes[i],runes[n-i-1] = runes[n-i-1],runes[i]
+    }
+    return string(runes)
 }

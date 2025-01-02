@@ -1,0 +1,64 @@
+package main
+
+import (
+    "fmt"
+)
+
+type Point struct {
+    x, y int
+}
+
+func isValid(x, y, n int) bool {
+    return x >= 0 && y >= 0 && x < n && y < n
+}
+
+// BFS to find the minimum number of steps
+func minKnightMoves(n int, start, end Point) int {
+    // Directions a knight can move
+    directions := []Point{
+        {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
+        {1, 2}, {1, -2}, {-1, 2}, {-1, -2},
+    }
+    
+    // Queue for BFS: each element is a Point with x, y, and steps
+    queue := []Point{start}
+    steps := 0
+    visited := make(map[Point]bool)
+    visited[start] = true
+
+    // Perform BFS
+    for len(queue) > 0 {
+        size := len(queue)
+        for i := 0; i < size; i++ {
+            current := queue[0]
+            queue = queue[1:]
+
+            // If we reach the destination, return the number of steps
+            if current == end {
+                return steps
+            }
+
+            // Try all possible knight moves
+            for _, direction := range directions {
+                newX := current.x + direction.x
+                newY := current.y + direction.y
+
+                if isValid(newX, newY, n) && !visited[Point{newX, newY}] {
+                    queue = append(queue, Point{newX, newY})
+                    visited[Point{newX, newY}] = true
+                }
+            }
+        }
+        steps++
+    }
+    return -1 // If there's no valid path, return -1
+}
+
+func main() {
+    n := 8 // Chessboard size (8x8)
+    start := Point{0, 0}    // Starting position
+    end := Point{7, 7}      // Destination position
+
+    result := minKnightMoves(n, start, end)
+    fmt.Printf("Minimum moves required: %d\n", result)
+}
